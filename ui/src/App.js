@@ -9,15 +9,17 @@ import './App.css';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('hello bu bir mesah');
+  const [message, setMessage] = useState('Hello saver Misha Kedy is here');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleRegister = async () => {
     try {
       await axios.post('http://backend.app.com/register', { username, password }).then((resp) => {
         setMessage(resp.data.message);
         alertify.success(resp.data.message);
+        setIsLoggedIn(true)
       }) 
     } catch (error) {
+      setIsLoggedIn(false)
 
       console.error('Registration error:', error);
       // setMessage(error.response.data.message);
@@ -26,14 +28,11 @@ function App() {
   
   const handleLogin = async () => {
     try {
-      
-       setIsLoggedIn(true)
-
-      // await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
-      //   setMessage(resp.data.message);
-      //   alertify.success(resp.data.message);
-      //   setIsLoggedIn(true)
-      // })
+      await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
+        setMessage(resp.data.message);
+        alertify.success(resp.data.message);
+        setIsLoggedIn(true)
+      })
     } catch (error) {
       console.error('Login error:', error);
       setIsLoggedIn(false)
@@ -69,7 +68,7 @@ function App() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={handleRegister}>Register</button>
+            <button className='blue' onClick={handleRegister}>Register</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
 

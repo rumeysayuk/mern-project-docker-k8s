@@ -16,7 +16,8 @@
 }
 
 .App-header {
-  background-color: #e390ee;
+  background: linear-gradient(135deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  animation: gradient 15s ease infinite;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -30,11 +31,55 @@
   color: #61dafb;
 }
 
+input {
+  padding: 10px;
+  border: 1px solid #23a6d5;
+  border-radius: 10px;
+}
+
+button {
+  padding: 5px;
+  border: 1px solid #e73c7e;
+  background: #e73c7e;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.blue {
+  border: 1px solid #23a6d5;
+  background: #23a6d5;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes gradient {
+
+  0% {
+
+    background-position: 0% 50%;
+
+  }
+
+  50% {
+
+    background-position: 100% 50%;
+
+  }
+
+  100% {
+
+    background-position: 0% 50%;
+
+  }
+
 }
