@@ -1,0 +1,19 @@
+services:
+  local_mongo:
+    image: mongo:6.0
+    container_name: local_mongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    networks:
+      - default
+    volumes:
+      - mongo-db:/data
+    healthcheck:
+      test: ["CMD","mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+volumes:
+  mongo-db:      
