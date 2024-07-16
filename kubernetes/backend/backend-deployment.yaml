@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: rumeysayuk/sample_backend:1.0.7
+        image: rumeysayuk/sample_backend:1.0.8
         ports:
         - containerPort: 5000
         resources:
