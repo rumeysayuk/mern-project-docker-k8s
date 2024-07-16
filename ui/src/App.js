@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios"
 import logo from './indir.jpeg';
 import alertify from 'alertifyjs';
@@ -23,19 +23,32 @@ function App() {
       // setMessage(error.response.data.message);
     }
   };
-
+  
   const handleLogin = async () => {
     try {
-      await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
-        setMessage(resp.data.message);
-        alertify.success(resp.data.message);
-      })
+      
+       setIsLoggedIn(true)
+
+      // await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
+      //   setMessage(resp.data.message);
+      //   alertify.success(resp.data.message);
+      //   setIsLoggedIn(true)
+      // })
     } catch (error) {
       console.error('Login error:', error);
+      setIsLoggedIn(false)
 
       // setMessage(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      setTimeout(() => {
+        setIsLoggedIn(false)
+      }, 2000);
+    }
+  }, [isLoggedIn])
 
   return (
     <div className="App">
@@ -60,7 +73,10 @@ function App() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-            <img src={logo} className="App-logo" alt="logo" />
+            <img src={logo} className="App-logo" alt="logo" style={{
+              transition: 'all 2s',
+              scale: isLoggedIn ? "1.8" : "1"
+            }} />
             <p style={{
               marginTop: "100px"
             }}>
