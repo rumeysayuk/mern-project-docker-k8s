@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios"
 import logo from './indir.jpeg';
 import alertify from 'alertifyjs';
-import 'alertifyjs/build/css/alertify.css'; 
+import useWindowSize from 'react-use/lib/useWindowSize'
+import 'alertifyjs/build/css/alertify.css';
 import './App.css';
+import Confetti from 'react-confetti';
 
 
 function App() {
@@ -11,13 +13,15 @@ function App() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('Hello saver Misha Kedy is here');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { width, height } = useWindowSize();
+
   const handleRegister = async () => {
     try {
       await axios.post('http://backend.app.com/register', { username, password }).then((resp) => {
         setMessage(resp.data.message);
         alertify.success(resp.data.message);
         setIsLoggedIn(true)
-      }) 
+      })
     } catch (error) {
       setIsLoggedIn(false)
 
@@ -25,7 +29,7 @@ function App() {
       // setMessage(error.response.data.message);
     }
   };
-  
+
   const handleLogin = async () => {
     try {
       await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
@@ -45,12 +49,16 @@ function App() {
     if (isLoggedIn) {
       setTimeout(() => {
         setIsLoggedIn(false)
-      }, 2000);
+      }, 6000);
     }
   }, [isLoggedIn])
 
   return (
     <div className="App">
+      {
+        isLoggedIn &&
+        <Confetti width={width} height={height} />
+      }
       <header className="App-header">
         <div style={{ display: 'flex', gap: '8rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
