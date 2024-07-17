@@ -25,3 +25,11 @@ komutları ile ingress, deployment, servisler ayağa kaldırılır. Mongo statef
 
 
 ui ve apiye  ait imageler dockerhub'a pushlandı. İmageler oradan çekilerek basit bir login register uygulaması yapılmıştır.
+
+cd monnitoring klasörü ile sistem izlenmesi yapılmaktadır.
+kubectl rollout status -n efk statefulset es-cluster komutu ile cluster ve replikalar kontrol edilebilirç
+
+kubectl get pods -n efk
+komutu ile podlar görüntülenir.
+
+elastik logların tutulacağı yeri ifade etmektedir. fluentd de logları toplayıp elastiğe gönderecek. daemon set olarak çalıştırılacak çünkü node üzerinde çalışacak
