@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  generation: 1
+  name: kibana-web
+  namespace: efk
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rumeysa.local.efk
+    http:
+      paths:
+      - backend:
+          service:
+            name: kibana
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
