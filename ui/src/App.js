@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios"
-import logo from './indir.jpeg';
+import logo from './miso2.png';
 import alertify from 'alertifyjs';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import 'alertifyjs/build/css/alertify.css';
@@ -17,10 +17,12 @@ function App() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://backend.app.com/register', { username, password }).then((resp) => {
+      // await axios.post('http://backend.app.com/register', { username, password }).then((resp) => {
+      await axios.post('/api/register', { username, password }).then((resp) => {
         setMessage(resp.data.message);
-        alertify.success(resp.data.message);
         setIsLoggedIn(true)
+
+        alertify.success(resp.data.message);
       })
     } catch (error) {
       setIsLoggedIn(false)
@@ -32,7 +34,9 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
+      // await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
+      await axios.post('/api/login', { username, password }).then((resp) => {
+
         setMessage(resp.data.message);
         alertify.success(resp.data.message);
         setIsLoggedIn(true)
@@ -80,9 +84,7 @@ function App() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-            <img src={logo} className="App-logo" alt="logo" style={{
-              transition: 'all 2s',
-              scale: isLoggedIn ? "1.8" : "1"
+            <img src={logo} className={`${isLoggedIn ? 'heart' : 'exit'}`} alt="logo" style={{
             }} />
             <p style={{
               marginTop: "100px"

@@ -15,22 +15,41 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
+
   backend:
     build:
-      context: ./backend
+      context: ../api
       dockerfile: Dockerfile
+    container_name: backend
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/usr/src/app
+    # volumes:
+    #   - ../api:/usr/src/app
+    networks:
+      - default 
+
   frontend:
     build:
-      context: ./frontend
+      context: ../ui
       dockerfile: Dockerfile
+    container_name: ui
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
+    # volumes:
+    #   - ./ui:/app
+    networks:
+      - default  
+  
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - default
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   mongo-db:      

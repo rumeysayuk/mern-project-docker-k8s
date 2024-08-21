@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-mongoose.connect('mongodb://mongo-service:27017').then(()=>{
+// mongoose.connect('mongodb://mongo-service:27017').then(()=>{
+mongoose.connect('mongodb://local_mongo:27017/mern-app').then(()=>{
+
     console.log("mongodb is connected");
 }).catch((err)=>{
     console.log(`mongo db conn err => ${err}`);
@@ -21,7 +23,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // Register Endpoint
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   const newUser = new User({ username, password });
   await newUser.save();
@@ -30,7 +32,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login Endpoint
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username, password });
   if (user) {
