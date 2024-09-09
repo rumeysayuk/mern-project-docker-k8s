@@ -1,27 +1,32 @@
-# Base image olarak node'un 14 versiyonunu kullan
-FROM node:14
+# Use an official Node runtime as a parent image
+FROM node:19-alpine as build
 
-# Uygulama dizinini oluştur
+# Set the working directory to /app
 WORKDIR /app
 
-# package.json ve package-lock.json dosyalarını çalışma dizinine kopyala
-COPY package.json /app
-COPY package-lock.json /app
+# Copy the package.json and package-lock.json to the container
+COPY package*.json ./
 
-# Gerekli bağımlılıkları yükle
+# Install dependencies
 RUN npm install
 
-# Uygulama kaynak kodunu kopyala
-COPY . /app
+# Copy the rest of the application code to the container
+COPY . .
 
-# Uygulamayı derle
+# Build the React app
 RUN npm run build
 
-# Uygulamayı serve paketi ile servis edeceğiz
-RUN npm install -g serve
+# Use an official Nginx runtime as a parent image
+FROM nginx:1.21.0-alpine
 
-# 3000 portunu dışa aç
-EXPOSE 3000
+# Copy the ngnix.conf to the container
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Uygulamayı başlat
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Copy the React app build files to the container
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80 for Nginx
+EXPOSE 80
+
+# Start Nginx when the container starts
+CMD ["nginx", "-g", "daemon off;"]

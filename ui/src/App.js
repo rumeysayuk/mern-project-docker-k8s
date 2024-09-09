@@ -1,118 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import axios from "axios"
-import logo from './miso2.png';
-import alertify from 'alertifyjs';
-import useWindowSize from 'react-use/lib/useWindowSize'
-import 'alertifyjs/build/css/alertify.css';
+import React, { useState } from 'react';
 import './App.css';
-import Confetti from 'react-confetti';
-
 
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('Hello saver Misha Kedy is here');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { width, height } = useWindowSize();
+  const [message, setMessage] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleRegister = async () => {
-    try {
-      // await axios.post('http://backend.app.com/register', { username, password }).then((resp) => {
-      await axios.post('/api/register', { username, password }).then((resp) => {
-        setMessage(resp.data.message);
-        setIsLoggedIn(true)
-
-        alertify.success(resp.data.message);
-      })
-    } catch (error) {
-      setIsLoggedIn(false)
-
-      console.error('Registration error:', error);
-      // setMessage(error.response.data.message);
-    }
+  const handleLogin = () => {
+    fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+      .then(response => response.json())
+      .then(data => setMessage(data.message))
+      .catch(error => setMessage('Error logging in: ' + error));
   };
 
-  const handleLogin = async () => {
-    try {
-      // await axios.post('http://backend.app.com/login', { username, password }).then((resp) => {
-      await axios.post('/api/login', { username, password }).then((resp) => {
-
-        setMessage(resp.data.message);
-        alertify.success(resp.data.message);
-        setIsLoggedIn(true)
-      })
-    } catch (error) {
-      console.error('Login error:', error);
-      setIsLoggedIn(false)
-
-      // setMessage(error.response.data.message);
-    }
+  const handleRegister = () => {
+    fetch('http://192.168.2.205/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+      .then(response => response.json())
+      .then(data => setMessage(data.message))
+      .catch(error => setMessage('Error registering: ' + error));
   };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      setTimeout(() => {
-        setIsLoggedIn(false)
-      }, 6000);
-    }
-  }, [isLoggedIn])
 
   return (
     <div className="App">
-      {
-        isLoggedIn &&
-        <Confetti width={width} height={height} />
-      }
-      <header className="App-header">
-        <div style={{ display: 'flex', gap: '8rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-
-            <h2>Register</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button className='blue' onClick={handleRegister}>Register</button>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-
-            <img src={logo} className={`${isLoggedIn ? 'heart' : 'exit'}`} alt="logo" style={{
-            }} />
-            <p style={{
-              marginTop: "100px"
-            }}>
-              {message}
-            </p>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <h2>Login</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>Login</button>
-          </div>
-        </div>
-      </header>
-
-
-
+      <h1>{isRegistering ? 'Register' : 'Login'}</h1>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={e => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+      <button onClick={isRegistering ? handleRegister : handleLogin}>
+        {isRegistering ? 'Register' : 'Login'}
+      </button>
+      <p>{message}</p>
+      <button onClick={() => setIsRegistering(!isRegistering)}>
+        {isRegistering ? 'Already have an account? Login' : "Don't have an account? Register"}
+      </button>
     </div>
   );
 }
